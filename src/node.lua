@@ -22,12 +22,12 @@ local S = minetest.get_translator("um_area_forsale")
 
 minetest.register_node("um_area_forsale:for_sale_sign", {
 	tiles = {
-		"default_wood.png",
-		"default_wood.png",
-		"default_wood.png",
-		"default_wood.png",
-		"realestate_sign_back.png",
-		"realestate_sign.png"
+		"um_area_forsale_wood.png",
+		"um_area_forsale_wood.png",
+		"um_area_forsale_wood.png",
+		"um_area_forsale_wood.png",
+		"um_area_forsale_sign_back.png",
+		"um_area_forsale_sign.png"
 	},
 	drawtype = "nodebox",
 	paramtype = "light",
@@ -75,14 +75,16 @@ minetest.register_node("um_area_forsale:for_sale_sign", {
     end
 })
 
-minetest.register_craft({
-	output = "um_area_forsale:for_sale_sign",
-	recipe = {
-		{"default:stick", "default:stick", "default:stick"},
-		{"default:stick", "", "default:sign_wall_wood"},
-		{"default:stick", "", ""}
-	}
-})
+if minetest.get_modpath("default") then
+    minetest.register_craft({
+        output = "um_area_forsale:for_sale_sign",
+        recipe = {
+            {"default:stick", "default:stick", "default:stick"},
+            {"default:stick", "", "default:sign_wall_wood"},
+            {"default:stick", "", ""}
+        }
+    })
+end
 
 if not minetest.get_modpath("realestate") then
     minetest.register_alias("realestate:sign", "um_area_forsale:for_sale_sign")
