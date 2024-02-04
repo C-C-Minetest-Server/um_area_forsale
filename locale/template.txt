@@ -1,0 +1,51 @@
+# textdomain: um_area_forsale
+
+##[ src/area_tx.lua ]##
+Area not found.=
+You are not the owner.=
+Owner does not exist.=
+Receiver does not exist.=
+Area ownership check failed.=
+Failed to transfer money.=
+Failed to transfer area ownership.=
+Account not found.=
+Insufficant balance.=
+
+##[ src/gui.lua ]##
+For Sale Sign: @1=
+Exit=
+Protection Violation=
+You are not allowed to setup this sign!=
+Sign Setup=
+Area IDs, comma-seperated=
+Description=
+Price=
+Confirm=
+Invalid price.=
+Invalid Area IDs.=
+The following areas are problematic:=
+Area for sale by @1=
+Area Information=
+Description: @1=
+Area owner: @1=
+Area(s) to be sold:=
+Area Price: $@1=
+Area Transfer=
+Sign destructed during the transaction.=
+These areas are transferred to you:=
+Remove this sign to@nstop selling the areas.=
+
+##[ src/mail.lua ]##
+Dear @1,=
+We hereby notify you that an area transaction was done via the For Sale Sign at @1, which was named @2. The following areas are transferred to @3:=
+In exchange, you should have received $@1 from @2. Please check your account balance.=
+Thank you for choosing the For Sale Sign system. If you find any Wire Transfer System bugs, please report them at @1.=
+Yours truly,=
+For Sale Sign System=
+This is an automatically sent message. Do not reply.=
+Area transaction at @1=
+
+##[ src/node.lua ]##
+For Sale Sign=
+Unconfigured for sale sign=
+This For Sale Sign belongs to @1, you can't remove it.=
