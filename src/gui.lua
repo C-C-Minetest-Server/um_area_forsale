@@ -187,7 +187,7 @@ um_area_forsale.gui = flow.make_gui(function(player, ctx)
                             meta:set_string("id", table.concat(list_areas, ", "))
                             meta:set_string("price", ctx.form.setup_price)
                             meta:set_string("description", ctx.form.setup_desc or "")
-                            meta:set_string("infotext", S("Area for sale by @1", name))
+                            um_area_forsale.set_infotext(meta, name)
                         end
 
                         ctx.tab = "main"

@@ -24,7 +24,6 @@ Confirm=
 Invalid price.=
 Invalid Area IDs.=
 The following areas are problematic:=
-Area for sale by @1=
 Area Information=
 Description: @1=
 Area owner: @1=
@@ -34,6 +33,10 @@ Area Transfer=
 Sign destructed during the transaction.=
 These areas are transferred to you:=
 Remove this sign to@nstop selling the areas.=
+
+##[ src/infotext.lua ]##
+Area for sale by @1=
+Right-click for more details=
 
 ##[ src/mail.lua ]##
 Dear @1,=

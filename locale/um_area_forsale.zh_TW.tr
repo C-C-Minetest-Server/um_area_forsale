@@ -24,7 +24,6 @@ Confirm=確定
 Invalid price.=無效的價格。
 Invalid Area IDs.=無效保護區編號。
 The following areas are problematic:=以下保護區編號存在問題：
-Area for sale by @1=@1 的待售保護區
 Area Information=保護區資訊
 Description: @1=描述：@1
 Area owner: @1=保護區擁有者：@1
@@ -34,6 +33,10 @@ Area Transfer=轉移保護區擁有權
 Sign destructed during the transaction.=在轉移過程中，待售標誌被拆去。
 These areas are transferred to you:=以下保護區已經轉移至您的名下：
 Remove this sign to@nstop selling the areas.=移除待售標誌@n以停止售出保護區。
+
+##[ src/infotext.lua ]##
+Area for sale by @1=@1 的待售保護區
+Right-click for more details=右鍵點擊以獲取更多資訊
 
 ##[ src/mail.lua ]##
 Dear @1,=@1，
