@@ -1,0 +1,54 @@
+# textdomain: um_area_forsale
+
+##[ src/area_tx.lua ]##
+Area not found.=找不到保护区。
+You are not the owner.=您不是拥有者。
+Owner does not exist.=拥有者不存在。
+Receiver does not exist.=买家不存在。
+Area ownership check failed.=保护区拥有权检查失败。
+Failed to transfer money.=汇款失败。
+Failed to transfer area ownership.=更改保护区拥有权失败。
+Account not found.=找不到账户。
+Insufficant balance.=余额不足。
+
+##[ src/gui.lua ]##
+For Sale Sign: @1=待售标志：@1
+Exit=退出
+Protection Violation=区域被保护
+You are not allowed to setup this sign!=您不能设定此待售标志！
+Sign Setup=设定待售标志
+Area IDs, comma-seperated=保护区编号，以半形逗号分隔
+Description=描述
+Price=价格
+Confirm=确定
+Invalid price.=无效的价格。
+Invalid Area IDs.=无效保护区编号。
+The following areas are problematic:=以下保护区编号存在问题：
+Area Information=保护区资讯
+Description: @1=描述：@1
+Area owner: @1=保护区拥有者：@1
+Area(s) to be sold:=待售的保护区：
+Area Price: $@1=保护区价格：$@1
+Area Transfer=转移保护区拥有权
+Sign destructed during the transaction.=在转移过程中，待售标志被拆去。
+These areas are transferred to you:=以下保护区已经转移至您的名下：
+Remove this sign to@nstop selling the areas.=移除待售标志@n以停止售出保护区。
+
+##[ src/infotext.lua ]##
+Area for sale by @1=@1 的待售保护区
+Right-click for more details=右键点击以获取更多资讯
+
+##[ src/mail.lua ]##
+Dear @1,=@1，
+We hereby notify you that an area transaction was done via the For Sale Sign at @1, which was named @2. The following areas are transferred to @3:=我们特此通知您，在@1 处名为@2 的待 售标志已经完成其保护区交易。 以下保护区已经转移至 @3 名下：
+In exchange, you should have received $@1 from @2. Please check your account balance.=作为交换，您应该从 @2 收到 $@1。 请检查您的账户余额。
+Thank you for choosing the For Sale Sign system. If you find any Wire Transfer System bugs, please report them at @1.=感谢选用待售标志系统。 如有发现任何软件错误，请在 @1 回报。
+Yours truly,=以上，
+For Sale Sign System=待售标志系统
+This is an automatically sent message. Do not reply.=这是一则自动发送的信息，请勿回覆。
+Area transaction at @1=位于 @1 的保护区交易
+
+##[ src/node.lua ]##
+For Sale Sign=待售标志
+Unconfigured for sale sign=未设定的待售标志
+This For Sale Sign belongs to @1, you can't remove it.=这个待售标志属于 @1，您无法移除它。
