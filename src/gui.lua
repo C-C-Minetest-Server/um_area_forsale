@@ -85,10 +85,6 @@ um_area_forsale.gui = flow.make_gui(function(player, ctx)
 
     local meta = minetest.get_meta(ctx.pos)
     if meta:get_string("price") == "" or meta:get_string("id") == "" then
-        if minetest.is_protected(ctx.pos, name) then
-            minetest.record_protection_violation(ctx.pos, name)
-            return tab_error(S("Protection Violation"), S("You are not allowed to setup this sign!"))
-        end
         ctx.tab = "setup"
     else
         ctx.tab = ctx.tab or "main"
@@ -98,6 +94,11 @@ um_area_forsale.gui = flow.make_gui(function(player, ctx)
     ctx.errmsg = ""
 
     if ctx.tab == "setup" then
+        if minetest.is_protected(ctx.pos, name) then
+            minetest.record_protection_violation(ctx.pos, name)
+            return tab_error(S("Protection Violation"), S("You are not allowed to setup this sign!"))
+        end
+
         return tab_frame(S("Sign Setup"), gui.VBox {
             min_w = 8,
             errmsg and gui.Label {
@@ -302,8 +303,20 @@ um_area_forsale.gui = flow.make_gui(function(player, ctx)
 
                         return true
                     end,
-                } or gui.Label {
-                    label = S("Remove this sign to\nstop selling the areas."),
+                } or gui.Button {
+                    label = S("Edit"),
+                    on_event = function(player, ctx)
+                        local pos = ctx.pos
+                        local meta = minetest.get_meta(pos)
+
+                        ctx.form.setup_ids = meta:get_string("id")
+                        ctx.form.setup_desc = meta:get_string("description")
+                        ctx.form.setup_price = meta:get_string("price")
+
+                        ctx.tab = "setup"
+
+                        return true
+                    end,
                 }
             }
         })

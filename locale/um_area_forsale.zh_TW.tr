@@ -32,7 +32,7 @@ Area Price: $@1=保護區價格：$@1
 Area Transfer=轉移保護區擁有權
 Sign destructed during the transaction.=在轉移過程中，待售標誌被拆去。
 These areas are transferred to you:=以下保護區已經轉移至您的名下：
-Remove this sign to@nstop selling the areas.=移除待售標誌@n以停止售出保護區。
+Edit=修改
 
 ##[ src/infotext.lua ]##
 Area for sale by @1=@1 的待售保護區
@@ -52,3 +52,8 @@ Area transaction at @1=位於 @1 的保護區交易
 For Sale Sign=待售標誌
 Unconfigured for sale sign=未設定的待售標誌
 This For Sale Sign belongs to @1, you can't remove it.=這個待售標誌屬於 @1，您無法移除它。
+
+
+##### not used anymore #####
+
+Remove this sign to@nstop selling the areas.=移除待售標誌@n以停止售出保護區。

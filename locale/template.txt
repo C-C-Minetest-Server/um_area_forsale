@@ -32,7 +32,7 @@ Area Price: $@1=
 Area Transfer=
 Sign destructed during the transaction.=
 These areas are transferred to you:=
-Remove this sign to@nstop selling the areas.=
+Edit=
 
 ##[ src/infotext.lua ]##
 Area for sale by @1=
