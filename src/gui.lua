@@ -65,6 +65,14 @@ local function comma_sep_int(str)
     return true, rtn
 end
 
+um_area_forsale.registered_on_area_tx = {}
+function um_area_forsale.register_on_area_tx(func)
+    -- original_owner, new_owner, price, pos, list_areas, description
+    um_area_forsale.registered_on_area_tx[#um_area_forsale.registered_on_area_tx+1] = func
+end
+
+um_area_forsale.register_on_area_tx(um_area_forsale.mail_to_owner)
+
 um_area_forsale.gui = flow.make_gui(function(player, ctx)
     if ctx.tab == "error" then
         return tab_error(ctx.title, ctx.errmsg)
@@ -298,7 +306,10 @@ um_area_forsale.gui = flow.make_gui(function(player, ctx)
                             ctx.errmsg = S("These areas are transferred to you:") .. "\n" ..
                                 um_area_forsale.area_ids_stringify(list_areas)
 
-                            um_area_forsale.mail_to_owner(owner, name, price, ctx.pos, list_areas, description)
+                            for _, func in ipairs(um_area_forsale.registered_on_area_tx) do
+                                -- original_owner, new_owner, price, pos, list_areas, description
+                                func(owner, name, price, ctx.pos, list_areas, description)
+                            end
                         end
 
                         return true
