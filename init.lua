@@ -27,6 +27,7 @@ for _, name in ipairs({
     "mail",
     "gui",
     "node",
+    "teacher",
 }) do
     dofile(MP .. "/src/" .. name .. ".lua")
 end
