@@ -23,6 +23,7 @@ function um_area_forsale.mail_to_owner() end
 
 if not minetest.get_modpath("mail") then
     minetest.log("warning", "[um_area_forsale] Mail mod not found, skipping mail.")
+    return
 end
 
 function um_area_forsale.mail_to_owner(owner, dest, amount, sign_pos, list_areas, description)
