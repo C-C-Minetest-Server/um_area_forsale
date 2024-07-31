@@ -22,13 +22,28 @@ local S = minetest.get_translator("um_area_forsale")
 local C = minetest.colorize
 local gui = flow.widgets
 
+local teacher_exists = minetest.global_exists("teacher") and true or false
+
 local function tab_frame(title, content)
     return gui.VBox {
+        min_w = 8,
         gui.HBox {
             gui.Label {
                 label = S("For Sale Sign: @1", title),
                 expand = true, align_h = "left",
+                w = 6,
             },
+            teacher_exists and gui.ButtonExit {
+                label = "?",
+                w = 0.7, h = 0.7,
+                on_event = function(e_player)
+                    minetest.after(0, function(name)
+                        if minetest.get_player_by_name(name) then
+                            teacher.simple_show(e_player, "um_area_forsale:tutorial_sign")
+                        end
+                    end, e_player:get_player_name())
+                end,
+            } or gui.Nil{},
             gui.ButtonExit {
                 label = "x",
                 w = 0.7, h = 0.7,
@@ -42,11 +57,13 @@ end
 local function tab_error(title, description)
     return tab_frame(title, gui.VBox {
         gui.Label {
-            label = description
+            label = description,
+            w = 8,
         },
         gui.ButtonExit {
             label = S("Exit"),
             expand = true, align_h = "right",
+            w = 4,
         }
     })
 end
