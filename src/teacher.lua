@@ -36,19 +36,19 @@ teacher.register_turorial("um_area_forsale:tutorial_sign", {
     },
 
     {
-        texture = "um_area_forsale_tutorial_1.png",
+        texture = "um_area_forsale_tutorial_1.jpg",
         text = S(
             "For Sale Sign handles land transactions without the owner's presence. " ..
             "To buy land, right-click the corresponding For Sale Sign."),
     },
     {
-        texture = "um_area_forsale_tutorial_2.png",
+        texture = "um_area_forsale_tutorial_2.jpg",
         text = S(
             "After right-clicking the sign, you can see the details of the land. " ..
             "Click on the Confirm button to do the transaction.")
     },
     {
-        texture = "um_area_forsale_tutorial_3.png",
+        texture = "um_area_forsale_tutorial_3.jpg",
         text =
             S("To set up a For Sale Sign, place it down and right-click it. " ..
                 "Fill in the fields with the corresponding information, then click Confirm.") ..
