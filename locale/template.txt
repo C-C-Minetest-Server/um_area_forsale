@@ -19,8 +19,11 @@ You are not allowed to setup this sign!=
 Sign Setup=
 Area IDs, comma-seperated=
 Description=
+Set up for=
 Price=
 Confirm=
+You are not allowed to set up for others.=
+Invalid player name.=
 Invalid price.=
 Invalid Area IDs.=
 The following areas are problematic:=
@@ -29,10 +32,10 @@ Description: @1=
 Area owner: @1=
 Area(s) to be sold:=
 Area Price: $@1=
+Edit=
 Area Transfer=
 Sign destructed during the transaction.=
 These areas are transferred to you:=
-Edit=
 
 ##[ src/infotext.lua ]##
 Area for sale by @1=
@@ -49,6 +52,15 @@ This is an automatically sent message. Do not reply.=
 Area transaction at @1=
 
 ##[ src/node.lua ]##
-For Sale Sign=
 Unconfigured for sale sign=
 This For Sale Sign belongs to @1, you can't remove it.=
+
+##[ src/node.lua ]##
+##[ src/teacher.lua ]##
+For Sale Sign=
+
+##[ src/teacher.lua ]##
+For Sale Sign handles land transactions without the owner's presence. To buy land, right-click the corresponding For Sale Sign.=
+After right-clicking the sign, you can see the details of the land. Click on the Confirm button to do the transaction.=
+To set up a For Sale Sign, place it down and right-click it. Fill in the fields with the corresponding information, then click Confirm.=
+If you set up a sign, you can modify an existing one using the Edit button in the right-click interface.=

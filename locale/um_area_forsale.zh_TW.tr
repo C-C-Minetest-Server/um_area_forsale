@@ -19,8 +19,11 @@ You are not allowed to setup this sign!=您不能設定此待售標誌！
 Sign Setup=設定待售標誌
 Area IDs, comma-seperated=保護區編號，以半形逗號分隔
 Description=描述
+Set up for=爲其他人設定
 Price=價格
 Confirm=確定
+You are not allowed to set up for others.=
+Invalid player name.=
 Invalid price.=無效的價格。
 Invalid Area IDs.=無效保護區編號。
 The following areas are problematic:=以下保護區編號存在問題：
@@ -29,10 +32,10 @@ Description: @1=描述：@1
 Area owner: @1=保護區擁有者：@1
 Area(s) to be sold:=待售的保護區：
 Area Price: $@1=保護區價格：$@1
+Edit=修改
 Area Transfer=轉移保護區擁有權
 Sign destructed during the transaction.=在轉移過程中，待售標誌被拆去。
 These areas are transferred to you:=以下保護區已經轉移至您的名下：
-Edit=修改
 
 ##[ src/infotext.lua ]##
 Area for sale by @1=@1 的待售保護區
@@ -49,9 +52,18 @@ This is an automatically sent message. Do not reply.=這是一則自動發送的
 Area transaction at @1=位於 @1 的保護區交易
 
 ##[ src/node.lua ]##
-For Sale Sign=待售標誌
 Unconfigured for sale sign=未設定的待售標誌
 This For Sale Sign belongs to @1, you can't remove it.=這個待售標誌屬於 @1，您無法移除它。
+
+##[ src/node.lua ]##
+##[ src/teacher.lua ]##
+For Sale Sign=待售標誌
+
+##[ src/teacher.lua ]##
+For Sale Sign handles land transactions without the owner's presence. To buy land, right-click the corresponding For Sale Sign.=
+After right-clicking the sign, you can see the details of the land. Click on the Confirm button to do the transaction.=
+To set up a For Sale Sign, place it down and right-click it. Fill in the fields with the corresponding information, then click Confirm.=
+If you set up a sign, you can modify an existing one using the Edit button in the right-click interface.=
 
 
 ##### not used anymore #####
