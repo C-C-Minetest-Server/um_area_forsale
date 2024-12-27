@@ -18,7 +18,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 ]]
 
-local S = minetest.get_translator("um_area_forsale")
+local S = core.get_translator("um_area_forsale")
 
 um_area_forsale.err_translate = {
     -- um_area_forsale.check_areas_ownership
@@ -76,7 +76,7 @@ function um_area_forsale.do_area_tranfer(list_areas, dest)
     for _, area_id in ipairs(list_areas) do
         local entry = areas.areas[area_id]
         if entry then
-            entry.owner = dest
+            entry.owner = dest -- luacheck: ignore
         end
     end
     areas:save()

@@ -18,11 +18,11 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 ]]
 
-local S = minetest.get_translator("um_area_forsale")
-local C = minetest.colorize
+local S = core.get_translator("um_area_forsale")
+local C = core.colorize
 local gui = flow.widgets
 
-local teacher_exists = minetest.global_exists("teacher") and true or false
+local teacher_exists = core.global_exists("teacher") and true or false
 
 local function tab_frame(title, content)
     return gui.VBox {
@@ -37,8 +37,8 @@ local function tab_frame(title, content)
                 label = "?",
                 w = 0.7, h = 0.7,
                 on_event = function(e_player)
-                    minetest.after(0, function(name)
-                        if minetest.get_player_by_name(name) then
+                    core.after(0, function(name)
+                        if core.get_player_by_name(name) then
                             teacher.simple_show(e_player, "um_area_forsale:tutorial_sign")
                         end
                     end, e_player:get_player_name())
@@ -84,7 +84,7 @@ end
 
 local function has_modify_rights(name, owner)
     if name == owner then return true end
-    if minetest.check_player_privs(name, areas.adminPrivs) then return true end
+    if core.check_player_privs(name, areas.adminPrivs) then return true end
     return false
 end
 
@@ -108,13 +108,13 @@ um_area_forsale.gui = flow.make_gui(function(player, ctx)
 
     local name = player:get_player_name()
     do
-        local node = minetest.get_node(ctx.pos)
+        local node = core.get_node(ctx.pos)
         if node.name ~= "um_area_forsale:for_sale_sign" then
             return tab_error("Internal Code Error", "Invalid sign position.")
         end
     end
 
-    local meta = minetest.get_meta(ctx.pos)
+    local meta = core.get_meta(ctx.pos)
     if meta:get_string("price") == "" or meta:get_string("id") == "" then
         ctx.tab = "setup"
     else
@@ -130,8 +130,8 @@ um_area_forsale.gui = flow.make_gui(function(player, ctx)
             if not has_modify_rights(name, owner) then
                 return tab_error(S("Protection Violation"), S("You are not allowed to setup this sign!"))
             end
-        elseif minetest.is_protected(ctx.pos, name) then
-            minetest.record_protection_violation(ctx.pos, name)
+        elseif core.is_protected(ctx.pos, name) then
+            core.record_protection_violation(ctx.pos, name)
             return tab_error(S("Protection Violation"), S("You are not allowed to setup this sign!"))
         end
 
@@ -148,7 +148,7 @@ um_area_forsale.gui = flow.make_gui(function(player, ctx)
                 name = "setup_desc",
                 label = S("Description"),
             },
-            minetest.check_player_privs(name, areas.adminPrivs) and gui.Field {
+            core.check_player_privs(name, areas.adminPrivs) and gui.Field {
                 name = "setup_for",
                 label = S("Set up for"),
                 default = name,
@@ -162,97 +162,101 @@ um_area_forsale.gui = flow.make_gui(function(player, ctx)
                 gui.Button {
                     name = "setup_confirm",
                     label = S("Confirm"),
-                    on_event = function(player, ctx)
-                        local name = player:get_player_name()
+                    on_event = function(e_player, e_ctx)
+                        local e_name = e_player:get_player_name()
                         do
-                            local node = minetest.get_node(ctx.pos)
+                            local node = core.get_node(e_ctx.pos)
                             if node.name ~= "um_area_forsale:for_sale_sign" then
-                                ctx.tab = "error"
-                                ctx.title = "Internal Code Error"
-                                ctx.errmsg = "Invalid sign position."
+                                e_ctx.tab = "error"
+                                e_ctx.title = "Internal Code Error"
+                                e_ctx.errmsg = "Invalid sign position."
                                 return true
                             end
                         end
 
-                        local meta = minetest.get_meta(ctx.pos)
-                        local old_owner = meta:get_string("owner")
+                        local e_meta = core.get_meta(e_ctx.pos)
+                        local old_owner = e_meta:get_string("owner")
                         if old_owner ~= "" then
-                            if not has_modify_rights(name, old_owner) then
-                                ctx.tab = "error"
-                                ctx.title = S("Protection Violation")
-                                ctx.errmsg = S("You are not allowed to setup this sign!")
+                            if not has_modify_rights(e_name, old_owner) then
+                                e_ctx.tab = "error"
+                                e_ctx.title = S("Protection Violation")
+                                e_ctx.errmsg = S("You are not allowed to setup this sign!")
                                 return true
                             end
-                        elseif minetest.is_protected(ctx.pos, name) then
-                            minetest.record_protection_violation(ctx.pos, name)
+                        elseif core.is_protected(e_ctx.pos, e_name) then
+                            core.record_protection_violation(e_ctx.pos, e_name)
 
-                            ctx.tab = "error"
-                            ctx.title = S("Protection Violation")
-                            ctx.errmsg = S("You are not allowed to setup this sign!")
+                            e_ctx.tab = "error"
+                            e_ctx.title = S("Protection Violation")
+                            e_ctx.errmsg = S("You are not allowed to setup this sign!")
                             return true
                         end
 
                         -- From here, name == set_for or name
-                        if ctx.form.setup_for and ctx.form.setup_for ~= name then
-                            if not minetest.check_player_privs(name, areas.adminPrivs) then
-                                ctx.errmsg = S("You are not allowed to set up for others.")
+                        if e_ctx.form.setup_for and e_ctx.form.setup_for ~= e_name then
+                            if not core.check_player_privs(e_name, areas.adminPrivs) then
+                                e_ctx.errmsg = S("You are not allowed to set up for others.")
                                 return true
                             end
-                            local set_for = ctx.form.setup_for
-                            if not minetest.get_player_by_name(set_for) then
-                                ctx.errmsg = S("Invalid player name.")
+                            local set_for = e_ctx.form.setup_for
+                            if not core.get_player_by_name(set_for) then
+                                e_ctx.errmsg = S("Invalid player name.")
                                 return true
                             end
-                            name = set_for
+                            e_name = set_for
                         end
 
                         do -- check price
-                            ctx.errmsg = S("Invalid price.")
+                            e_ctx.errmsg = S("Invalid price.")
 
-                            if not ctx.form.setup_price then
+                            if not e_ctx.form.setup_price then
                                 return true
                             end
 
-                            local price = tonumber(ctx.form.setup_price)
+                            local price = tonumber(e_ctx.form.setup_price)
                             if not (price and price >= 0 and price % 1 == 0) then
                                 return true
                             end
 
-                            ctx.errmsg = nil
+                            e_ctx.errmsg = nil
                         end
 
                         -- check IDs
-                        ctx.errmsg = S("Invalid Area IDs.")
-                        if not (ctx.form.setup_ids and ctx.form.setup_ids ~= "") then
-                            return true
+                        local list_areas
+                        do
+                            e_ctx.errmsg = S("Invalid Area IDs.")
+                            if not (e_ctx.form.setup_ids and e_ctx.form.setup_ids ~= "") then
+                                return true
+                            end
+                            local ok
+                            ok, list_areas = comma_sep_int(e_ctx.form.setup_ids)
+                            if not (ok and #list_areas ~= 0) then
+                                return true
+                            end
+                            e_ctx.errmsg = nil
                         end
-                        local ok, list_areas = comma_sep_int(ctx.form.setup_ids)
-                        if not (ok and #list_areas ~= 0) then
-                            return true
-                        end
-                        ctx.errmsg = nil
 
                         table.sort(list_areas)
 
                         do -- check area ownership
-                            local ok, msg = um_area_forsale.check_areas_ownership(name, list_areas)
+                            local ok, msg = um_area_forsale.check_areas_ownership(e_name, list_areas)
                             if not ok then
-                                ctx.errmsg = S("The following areas are problematic:")
+                                e_ctx.errmsg = S("The following areas are problematic:")
                                 for id, issue in pairs(msg) do
-                                    ctx.errmsg = ctx.errmsg .. "\n" ..
+                                    e_ctx.errmsg = e_ctx.errmsg .. "\n" ..
                                         id .. ": " .. um_area_forsale.err_translate[issue]
                                 end
                                 return true
                             end
                         end
 
-                        meta:set_string("owner", name)
-                        meta:set_string("id", table.concat(list_areas, ", "))
-                        meta:set_string("price", ctx.form.setup_price)
-                        meta:set_string("description", ctx.form.setup_desc or "")
-                        um_area_forsale.set_infotext(meta, name)
+                        e_meta:set_string("owner", e_name)
+                        e_meta:set_string("id", table.concat(list_areas, ", "))
+                        e_meta:set_string("price", e_ctx.form.setup_price)
+                        e_meta:set_string("description", e_ctx.form.setup_desc or "")
+                        um_area_forsale.set_infotext(e_meta, e_name)
 
-                        ctx.tab = "main"
+                        e_ctx.tab = "main"
                         return true
                     end,
                 }
@@ -268,10 +272,14 @@ um_area_forsale.gui = flow.make_gui(function(player, ctx)
             description = "N/A"
         end
 
-        local ok, list_areas = comma_sep_int(id)
-        if not ok then
-            -- This part of codes are unreachable without hacks
-            return tab_error("Internal Code Error", "Invalid id field.")
+        local list_areas
+        do
+            local ok
+            ok, list_areas = comma_sep_int(id)
+            if not ok then
+                -- This part of codes are unreachable without hacks
+                return tab_error("Internal Code Error", "Invalid id field.")
+            end
         end
 
         local balance = unified_money.get_balance_safe(name)
@@ -303,81 +311,79 @@ um_area_forsale.gui = flow.make_gui(function(player, ctx)
                 },
                 has_modify_rights(name, owner) and gui.Button {
                     label = S("Edit"),
-                    on_event = function(player, ctx)
-                        local pos = ctx.pos
-                        local meta = minetest.get_meta(pos)
+                    on_event = function(_, e_ctx)
+                        local pos = e_ctx.pos
+                        local e_meta = core.get_meta(pos)
 
-                        ctx.form.setup_ids = meta:get_string("id")
-                        ctx.form.setup_desc = meta:get_string("description")
-                        ctx.form.setup_price = meta:get_string("price")
-                        ctx.form.setup_for = meta:get_string("owner")
+                        e_ctx.form.setup_ids = e_meta:get_string("id")
+                        e_ctx.form.setup_desc = e_meta:get_string("description")
+                        e_ctx.form.setup_price = e_meta:get_string("price")
+                        e_ctx.form.setup_for = e_meta:get_string("owner")
 
-                        ctx.tab = "setup"
+                        e_ctx.tab = "setup"
 
                         return true
                     end,
                 } or gui.Nil {},
                 (name ~= owner) and gui.Button {
                     label = S("Confirm"),
-                    on_event = function(player, ctx)
-                        local name = player:get_player_name()
+                    on_event = function(e_player, e_ctx)
+                        local e_name = e_player:get_player_name()
 
-                        ctx.tab = "error"
-                        ctx.title = S("Area Transfer")
+                        e_ctx.tab = "error"
+                        e_ctx.title = S("Area Transfer")
 
                         do
-                            local node = minetest.get_node(ctx.pos)
+                            local node = core.get_node(e_ctx.pos)
                             if node.name ~= "um_area_forsale:for_sale_sign" then
-                                ctx.errmsg = S("Sign destructed during the transaction.")
+                                e_ctx.errmsg = S("Sign destructed during the transaction.")
                                 return true
                             end
                         end
 
-                        local owner = meta:get_string("owner")
-                        local id = meta:get_string("id")
-                        local price = meta:get_string("price")
+                        local e_owner = meta:get_string("owner")
+                        local e_id = meta:get_string("id")
+                        local e_price = meta:get_string("price")
 
-                        local balance = unified_money.get_balance_safe(name)
-
-                        price = tonumber(price)
-                        if not (price and price >= 0 and price % 1 == 0) then
+                        e_price = tonumber(e_price)
+                        if not (e_price and e_price >= 0 and e_price % 1 == 0) then
                             -- This part of codes are unreachable without hacks
-                            ctx.tab = "error"
-                            ctx.title = "Internal Code Error"
-                            ctx.errmsg = "Invalid price field."
+                            e_ctx.tab = "error"
+                            e_ctx.title = "Internal Code Error"
+                            e_ctx.errmsg = "Invalid price field."
                             return true
                         end
 
-                        local ok, list_areas = comma_sep_int(id)
+                        local ok, e_list_areas = comma_sep_int(e_id)
                         if not ok then
                             -- This part of codes are unreachable without hacks
-                            ctx.tab = "error"
-                            ctx.title = "Internal Code Error"
-                            ctx.errmsg = "Invalid id field."
+                            e_ctx.tab = "error"
+                            e_ctx.title = "Internal Code Error"
+                            e_ctx.errmsg = "Invalid id field."
                             return true
                         end
 
-                        local status, code, msg = um_area_forsale.do_area_tx(owner, price, list_areas, name)
+                        local status, code, msg = um_area_forsale.do_area_tx(e_owner, e_price, e_list_areas, e_name)
                         if not status then
-                            ctx.errmsg = um_area_forsale.err_translate[code]
+                            e_ctx.errmsg = um_area_forsale.err_translate[code]
                             if type(msg) == "string" then
-                                ctx.errmsg = ctx.errmsg .. "\n" .. (um_area_forsale.err_translate[msg] or msg)
+                                e_ctx.errmsg = e_ctx.errmsg .. "\n" .. (um_area_forsale.err_translate[msg] or msg)
                             end
                         else
-                            local description = meta:get_string("description")
+                            local e_description = meta:get_string("description")
 
-                            if description == "" then
-                                description = "N/A"
+                            if e_description == "" then
+                                e_description = "N/A"
                             end
 
-                            minetest.remove_node(ctx.pos)
-                            minetest.check_for_falling(ctx.pos)
-                            ctx.errmsg = S("These areas are transferred to you:") .. "\n" ..
-                                um_area_forsale.area_ids_stringify(list_areas)
+                            core.remove_node(e_ctx.pos)
+                            core.check_for_falling(e_ctx.pos)
+                            e_ctx.errmsg = S("These areas are transferred to you:") .. "\n" ..
+                                um_area_forsale.area_ids_stringify(e_list_areas)
 
                             for _, func in ipairs(um_area_forsale.registered_on_area_tx) do
                                 -- original_owner, new_owner, price, pos, list_areas, description
-                                func(owner, name, price, ctx.pos, list_areas, description)
+                                func(e_owner, e_name, e_price, e_ctx.pos, e_list_areas, e_description)
                             end
                         end
 

@@ -19,7 +19,7 @@
 ]]
 
 um_area_forsale = {}
-local MP = minetest.get_modpath("um_area_forsale")
+local MP = core.get_modpath("um_area_forsale")
 
 for _, name in ipairs({
     "infotext",

@@ -18,27 +18,29 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 ]]
 
-local S = minetest.get_translator("um_area_forsale")
+local S = core.get_translator("um_area_forsale")
 function um_area_forsale.mail_to_owner() end
 
-if not minetest.get_modpath("mail") then
-    minetest.log("warning", "[um_area_forsale] Mail mod not found, skipping mail.")
+if not core.get_modpath("mail") then
+    core.log("warning", "[um_area_forsale] Mail mod not found, skipping mail.")
     return
 end
 
 function um_area_forsale.mail_to_owner(owner, dest, amount, sign_pos, list_areas, description)
-    local pos_str = minetest.pos_to_string(sign_pos)
+    local pos_str = core.pos_to_string(sign_pos)
     local msg = table.concat({
         S("Dear @1,", owner),
         "",
-        S("We hereby notify you that an area transaction was done via the For Sale Sign at @1, which was named @2. The following areas are transferred to @3:",
+        S("We hereby notify you that an area transaction was done via the For Sale Sign at @1, which was named @2. " ..
+            "The following areas are transferred to @3:",
             pos_str, description, dest),
         "",
         um_area_forsale.area_ids_stringify(list_areas),
         "",
         S("In exchange, you should have received $@1 from @2. Please check your account balance.", amount, dest),
         "",
-        S("Thank you for choosing the For Sale Sign system. If you find any Wire Transfer System bugs, please report them at @1.",
+        S("Thank you for choosing the For Sale Sign system. If you find any Wire Transfer System bugs, " ..
+            "please report them at @1.",
             "https://github.com/C-C-Minetest-Server/um_area_forsale/issues"),
         "",
         S("Yours truly,"),

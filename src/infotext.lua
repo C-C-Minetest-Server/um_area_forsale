@@ -18,7 +18,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 ]]
 
-local S = minetest.get_translator("um_area_forsale")
+local S = core.get_translator("um_area_forsale")
 
 um_area_forsale.INFOTEXT_VER = 1
 
@@ -31,14 +31,14 @@ function um_area_forsale.set_infotext(meta, name)
     meta:set_string("infotext", infotext)
 end
 
-minetest.register_lbm({
+core.register_lbm({
     label = "[um_area_forsale] Upgrade old infotext",
     name = "um_area_forsale:update_infotext",
     nodenames = {
         "um_area_forsale:for_sale_sign",
     },
-    action = function(pos, node)
-        local meta = minetest.get_meta(pos)
+    action = function(pos)
+        local meta = core.get_meta(pos)
         if meta:get_int("infotext_ver") ~= um_area_forsale.INFOTEXT_VER then
             um_area_forsale.set_infotext(meta)
         end

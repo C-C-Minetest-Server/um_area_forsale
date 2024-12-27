@@ -18,9 +18,9 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 ]]
 
-if not minetest.global_exists("teacher") then return end
+if not core.global_exists("teacher") then return end
 
-local S = minetest.get_translator("um_area_forsale")
+local S = core.get_translator("um_area_forsale")
 
 teacher.register_turorial("um_area_forsale:tutorial_sign", {
     title = S("For Sale Sign"),
