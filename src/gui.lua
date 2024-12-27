@@ -82,6 +82,12 @@ local function comma_sep_int(str)
     return true, rtn
 end
 
+local function has_modify_rights(name, owner)
+    if name == owner then return true end
+    if minetest.check_player_privs(name, areas.adminPrivs) then return true end
+    return false
+end
+
 um_area_forsale.registered_on_area_tx = {}
 function um_area_forsale.register_on_area_tx(func)
     -- original_owner, new_owner, price, pos, list_areas, description
@@ -116,10 +122,15 @@ um_area_forsale.gui = flow.make_gui(function(player, ctx)
     end
 
     local errmsg = ctx.errmsg
-    ctx.errmsg = ""
+    ctx.errmsg = nil
 
     if ctx.tab == "setup" then
-        if minetest.is_protected(ctx.pos, name) then
+        local owner = meta:get_string("owner")
+        if owner ~= "" then
+            if not has_modify_rights(name, owner) then
+                return tab_error(S("Protection Violation"), S("You are not allowed to setup this sign!"))
+            end
+        elseif minetest.is_protected(ctx.pos, name) then
             minetest.record_protection_violation(ctx.pos, name)
             return tab_error(S("Protection Violation"), S("You are not allowed to setup this sign!"))
         end
@@ -137,6 +148,11 @@ um_area_forsale.gui = flow.make_gui(function(player, ctx)
                 name = "setup_desc",
                 label = S("Description"),
             },
+            minetest.check_player_privs(name, areas.adminPrivs) and gui.Field {
+                name = "setup_for",
+                label = S("Set up for"),
+                default = name,
+            } or gui.Nil {},
             gui.HBox {
                 gui.Field {
                     name = "setup_price",
@@ -158,13 +174,36 @@ um_area_forsale.gui = flow.make_gui(function(player, ctx)
                             end
                         end
 
-                        if minetest.is_protected(ctx.pos, name) then
+                        local meta = minetest.get_meta(ctx.pos)
+                        local old_owner = meta:get_string("owner")
+                        if old_owner ~= "" then
+                            if not has_modify_rights(name, old_owner) then
+                                ctx.tab = "error"
+                                ctx.title = S("Protection Violation")
+                                ctx.errmsg = S("You are not allowed to setup this sign!")
+                                return true
+                            end
+                        elseif minetest.is_protected(ctx.pos, name) then
                             minetest.record_protection_violation(ctx.pos, name)
 
                             ctx.tab = "error"
                             ctx.title = S("Protection Violation")
                             ctx.errmsg = S("You are not allowed to setup this sign!")
                             return true
+                        end
+
+                        -- From here, name == set_for or name
+                        if ctx.form.setup_for and ctx.form.setup_for ~= name then
+                            if not minetest.check_player_privs(name, areas.adminPrivs) then
+                                ctx.errmsg = S("You are not allowed to set up for others.")
+                                return true
+                            end
+                            local set_for = ctx.form.setup_for
+                            if not minetest.get_player_by_name(set_for) then
+                                ctx.errmsg = S("Invalid player name.")
+                                return true
+                            end
+                            name = set_for
                         end
 
                         do -- check price
@@ -207,14 +246,11 @@ um_area_forsale.gui = flow.make_gui(function(player, ctx)
                             end
                         end
 
-                        do
-                            local meta = minetest.get_meta(ctx.pos)
-                            meta:set_string("owner", name)
-                            meta:set_string("id", table.concat(list_areas, ", "))
-                            meta:set_string("price", ctx.form.setup_price)
-                            meta:set_string("description", ctx.form.setup_desc or "")
-                            um_area_forsale.set_infotext(meta, name)
-                        end
+                        meta:set_string("owner", name)
+                        meta:set_string("id", table.concat(list_areas, ", "))
+                        meta:set_string("price", ctx.form.setup_price)
+                        meta:set_string("description", ctx.form.setup_desc or "")
+                        um_area_forsale.set_infotext(meta, name)
 
                         ctx.tab = "main"
                         return true
@@ -265,6 +301,22 @@ um_area_forsale.gui = flow.make_gui(function(player, ctx)
                     label = um_translate_common.balance_show(balance),
                     expand = true, align_h = "left",
                 },
+                has_modify_rights(name, owner) and gui.Button {
+                    label = S("Edit"),
+                    on_event = function(player, ctx)
+                        local pos = ctx.pos
+                        local meta = minetest.get_meta(pos)
+
+                        ctx.form.setup_ids = meta:get_string("id")
+                        ctx.form.setup_desc = meta:get_string("description")
+                        ctx.form.setup_price = meta:get_string("price")
+                        ctx.form.setup_for = meta:get_string("owner")
+
+                        ctx.tab = "setup"
+
+                        return true
+                    end,
+                } or gui.Nil {},
                 (name ~= owner) and gui.Button {
                     label = S("Confirm"),
                     on_event = function(player, ctx)
@@ -331,21 +383,7 @@ um_area_forsale.gui = flow.make_gui(function(player, ctx)
 
                         return true
                     end,
-                } or gui.Button {
-                    label = S("Edit"),
-                    on_event = function(player, ctx)
-                        local pos = ctx.pos
-                        local meta = minetest.get_meta(pos)
-
-                        ctx.form.setup_ids = meta:get_string("id")
-                        ctx.form.setup_desc = meta:get_string("description")
-                        ctx.form.setup_price = meta:get_string("price")
-
-                        ctx.tab = "setup"
-
-                        return true
-                    end,
-                }
+                } or gui.Nil {},
             }
         })
     end
