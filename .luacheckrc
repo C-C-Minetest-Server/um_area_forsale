@@ -26,6 +26,7 @@ read_globals = {
     "areas",
     "teacher",
     "mail",
+    "echo",
     "unified_money",
     "um_translate_common",
 
